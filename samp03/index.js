@@ -14,6 +14,10 @@ app.get('/andre', (req, res) => {
     res.send('oajfafjsof')
 })
 
+app.get("/eae/:nome", (req, res) => {
+    res.send(`<h1>Ola, ${req.params.nome}</h1>`)
+})
+
 app.listen(porta, () => {
     console.log(`Servidor Rodando na porta ${porta}`)
 })
