@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize")
 const s = new Sequelize('postapp', 'root', 'Diegod1k!', {
     host: "localhost",
-    dialect: "mysql"
+    dialect: "mysql",
+    query: {raw: true}
 })
 
 s.authenticate()
