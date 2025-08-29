@@ -1,0 +1,93 @@
+<style>
+
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .main {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(137, 43, 226, 0.445);
+    }
+
+    .container {
+        background-color: white;
+        min-width: 400px;
+        min-width: 200px;
+        max-width: 50%;
+        max-height: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+
+    form input {
+        width: 150px;
+        height: 20px;
+        padding-left: 5px;
+    }
+
+    form textarea {
+        min-height: 70px;
+        height: auto;
+        max-height: fit-content;
+        padding-left: 3px;
+        padding-top: 5px;
+        padding: 5px;
+    }
+
+    form button {
+        font-weight: bold;
+        border: 1px solid black;
+        padding: 5px;
+        background-color: green;
+        color: white;
+        cursor: pointer;
+    }
+
+    form button:hover {
+        background-color: rgb(0, 92, 0);
+        scale: 1.1;
+        transition: 0.5s;
+    }
+
+</style>
+
+<main class="main">
+    <section class="container">
+        <h1>Cadastre sua postagem: </h1>
+        <form action="/sucesso" method="post" id="form">
+            <p>Titulo: </p>
+            <input type="text" name="titulo" id="inpTitulo">
+            <p>Conteudo: </p>
+            <textarea name="conteudo" id="InpConteudo"></textarea>
+            <button type="submit" id="btnCadastrar">Cadastrar Postagem</button>
+        </form>
+    </section>
+</main>
+
+<script>
+    let inpT = document.getElementById("inpTitulo")
+    let inpC = document.getElementById("InpConteudo")
+    let btnC = document.getElementById("btnCadastrar")
+    let f = document.getElementById("form")
+
+    f.addEventListener("submit", (e) => {
+        if (inpT.value == "" || inpC.value == "") {
+            alert("FALTAM DADOS, ALBUM CAMPO ESTÁ VAZIO!")
+            e.preventDefault()
+            return
+        }
+    })
+</script>

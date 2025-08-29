@@ -7,7 +7,7 @@ const handlebars = require("express-handlebars")
 const bodyParser = require('body-parser')
 
 //Handle
-app.engine('handlebars', handlebars.engine({
+app.engine("handlebars", handlebars.engine({
     defaultLayout: 'main',
 }))
 app.set('view engine', 'handlebars')
