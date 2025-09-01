@@ -1,51 +1,34 @@
 const mongoose = require("mongoose")
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/andre")
+mongoose.connect("mongodb://locallhost")
 .then(() => {
-    console.log("Tudo show")
+    console.log("Conectado com sucesso")
 })
 .catch((erro) => {
-    console.log(`Deu tudo errado irmao ${erro}`)
+    console.log(`Nâo foi possivel se conectar ao servidor: ${erro}`)
 })
 
-const UserSchema = mongoose.Schema({
-
+const userSchema = mongoose.Schema({
     nome: {
-        type: String,
-        require: true
-    },
-
-    sobrenome: {
-        type: String,
-        require: true
+        type: String
     },
 
     idade: {
-        type: Number,
-        require: true
-    },
-
-    email: {
-        type: String,
-        require: true
+        type: Number
     }
-
 })
 
-mongoose.model('Users', UserSchema)
-
+mongoose.model('Users', userSchema)
 const User = mongoose.model('Users')
 
 new User({
-    nome: 'Diego',
-    sobrenome: 'Zapora',
-    idade: 20,
-    email: 'diego@gmail.com'
+    nome: 'Cynosa',
+    idade: '21'
 }).save()
 .then(() => {
-    console.log("Cadastado com sucesso")
+    console.log("Deu tudo certo truta")
 })
 .catch((erro) => {
-    console.log(`Deu merda ${erro}`)
+    console.log(`Deu tudo errado irmao ${erro}`)
 })
