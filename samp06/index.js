@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://locallhost")
+mongoose.connect("mongodb://localhost/andre")
 .then(() => {
     console.log("Conectado com sucesso")
 })
@@ -11,24 +11,39 @@ mongoose.connect("mongodb://locallhost")
 
 const userSchema = mongoose.Schema({
     nome: {
-        type: String
+        type: String,
+        require: true
+    },
+
+    sobrenome: {
+        type: String,
+        require: true
     },
 
     idade: {
-        type: Number
+        type: Number,
+        require: true
+    },
+
+    email: {
+        type: String,
+        require: true
     }
 })
 
 mongoose.model('Users', userSchema)
+
 const User = mongoose.model('Users')
 
 new User({
-    nome: 'Cynosa',
-    idade: '21'
+    nome: 'Chester',
+    sobrenome: 'Burger',
+    idade: 41,
+    email: 'chester@gmail.com'
 }).save()
 .then(() => {
-    console.log("Deu tudo certo truta")
+    console.log("Cadastrado com sucesso")
 })
 .catch((erro) => {
-    console.log(`Deu tudo errado irmao ${erro}`)
+    console.log(`Erro ao cadastrar ${erro}`)
 })
