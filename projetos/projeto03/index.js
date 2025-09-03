@@ -22,7 +22,7 @@ app.use(session({
 app.use(flash())
 app.use((req, res, next) => {
     res.locals.sucessoMSG = req.flash("sucessoMSG")
-    res.locals.errorMSG = req.flash("erroMSG")
+    res.locals.erroMSG = req.flash("erroMSG")
     next()
 })
 

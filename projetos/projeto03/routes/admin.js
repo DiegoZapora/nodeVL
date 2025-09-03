@@ -14,7 +14,14 @@ router.get('/posts', (req, res) => {
 })
 
 router.get("/categorias", (req, res) => {
-    res.render("admin/categorias")
+    Categoria.find().sort({date: 'desc'}).lean()
+    .then((categorias) => {
+        res.render("admin/categorias", {categorias: categorias})
+    })
+    .catch((erro) => {
+        req.flash("erroMSG", "Erro ao carregar categorias! Tente novamente.")
+        res.redirect("/admin")
+    })
 })
 
 router.get("/categorias/add", (req, res) => {
@@ -55,6 +62,70 @@ router.post("/categorias/nova", (req, res) => {
             res.redirect("/admin")
         })
     }
+})
+
+router.get("/categorias/editar/:id", (req, res) => {
+    Categoria.findOne({_id: req.params.id}).lean()
+    .then((categoria) => {
+        res.render("admin/editar", {categoria: categoria})
+    })
+    .catch((erro) => {
+        req.flash('erroMSG', 'Está categoria não existe!')
+        res.redirect("/admin/categorias")
+    })
+})
+
+router.post("/categorias/editar", (req, res) => {
+
+    let erros = []
+
+    if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+        erros.push({texto: "Nome inválido."})
+    }
+
+    if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null) {
+        erros.push({texto: "Slug inválido."})
+    }
+
+    if(req.body.nome.length <= 1) {
+        erros.push({texto: "Nome da categoria muito curto."})
+    }
+
+    if (erros.length > 0) {
+        res.render("./admin/editar", {erros: erros})
+    } else {
+        Categoria.findOne({_id: req.body.id})
+        .then((categoria) => {
+            categoria.nome = req.body.nome
+            categoria.slug = req.body.slug
+
+            categoria.save()
+            .then(() => {
+                req.flash("sucessoMSG", "Categoria editada com sucesso.")
+                res.redirect("/admin/categorias")
+            })
+            .catch((erro) => {
+                req.flash("erroMSG", "Erro ao editar categoria!")
+                res.redirect("/admin/categorias")
+            })
+        })
+        .catch((erro) => {
+            req.flash("erroMSG", "Houve um erro ao editar a categoria! Tente novamente." + erro)
+            res.redirect("/admin/categorias")
+        })
+    }
+})
+
+router.post("/categorias/deletar", (req, res) => {
+    Categoria.deleteOne({_id: req.body.id})
+    .then(() => {
+        req.flash("sucessoMSG", "Categoria deletada com sucesso.")
+        res.redirect("/admin/categorias")
+    })
+    .catch((erro) => {
+        req.flash("erroMSG", "Houve um erro ao deltar a categoria.")
+        res.redirect("/admin/categorias")
+    })
 })
 
 module.exports = router
