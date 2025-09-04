@@ -4,6 +4,8 @@ const router = express.Router()
 const mongoose = require("mongoose")
 require("../models/Categoria")
 const Categoria = mongoose.model("categorias")
+require("../models/Postagem")
+const Postagem = mongoose.model("postagens")
 
 router.get('/', (req, res) => {
     res.render("admin/index")
@@ -126,6 +128,86 @@ router.post("/categorias/deletar", (req, res) => {
         req.flash("erroMSG", "Houve um erro ao deltar a categoria.")
         res.redirect("/admin/categorias")
     })
+})
+
+router.get("/postagens", (req, res) => {
+    Postagem.find().populate("categoria").sort({data: "desc"}).lean()
+    .then((postagens) => {
+        res.render("admin/postagens", {postagens: postagens})
+    })
+    .catch((erro) => {
+        req.flash("erroMSG", "Erro ao carregar postagens.")
+        res.redirect("/admin")
+    })
+})
+
+router.get("/postagens/add", (req, res) => {
+    Categoria.find().lean()
+    .then((categorias) => {
+        res.render("admin/addpostagens", {categorias: categorias})
+    })
+    .catch((erro) => {
+        req.flash("erroMSG", "Houve um erro ao carregar o formulario")
+        res.redirect("/admin")
+    })
+})
+
+router.post("/postagens/nova", (req, res) => {
+    let erros = []
+
+    if (!req.body.titulo || typeof req.body.titulo == undefined || req.body.titulo == null) {
+        erros.push({texto: "Titulo inválido."})
+    }
+
+    if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null) {
+        erros.push({texto: "Slug inválido."})
+    }
+
+    if (!req.body.conteudo || typeof req.body.conteudo == undefined || req.body.conteudo == null) {
+        erros.push({texto: "Conteudo invalido"})
+    }
+
+    if (!req.body.descricao || typeof req.body.descricao == undefined || req.body.descricao == null) {
+        erros.push({texto: "Descrição invalida"})
+    }
+
+    if(req.body.titulo.length <= 1) {
+        erros.push({texto: "Titulo muito curto."})
+    }
+
+    if(req.body.descricao.length <= 10) {
+        erros.push({texto: "Descrição muito curta."})
+    }
+
+    if(req.body.conteudo.length <= 25) {
+        erros.push({texto: "Conteudo muito curto."})
+    }
+
+    if (req.body.categoria == 0) {
+        erros.push({texto: "Nenhuma categoria selecionada."})
+    }
+
+    if (erros.length > 0) {
+        res.render("admin/addpostagens", {erros: erros})
+    } else {
+        const novaPostagem = {
+            titulo: req.body.titulo,
+            slug: req.body.slug,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            categoria: req.body.categoria
+        }
+
+        new Postagem(novaPostagem).save()
+        .then(() => {
+            req.flash("sucessoMSG", "Postagem criada com sucesso.")
+            res.redirect("/admin/postagens")
+        })
+        .catch((erro) => {
+            req.flash("erroMSG", "Erro ao criar postagem. Tente novamente.")
+            res.redirect("/admin/postagens")
+        })
+    }
 })
 
 module.exports = router
