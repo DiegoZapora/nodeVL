@@ -9,16 +9,16 @@
         <h4>Nova Postagem: </h4>
         <form action="/admin/postagens/nova" method="post">
             <label for="titulo">Titulo: </label>
-                <input type="text" name="titulo" class="form-control">
+                <input type="text" name="titulo" class="form-control" required minlength="5"> 
 
             <label for="slug">Slug: </label>
-                <input type="text" name="slug" class="form-control">
+                <input type="text" name="slug" class="form-control" required minlength="2">
 
-            <label for="descricao">Descrição</label>
-                <input type="text" name="descricao" class="form-control">
+            <label for="descricao">Descrição: </label>
+                <input type="text" name="descricao" class="form-control" required minlength="10">
             
             <label for="conteudo">Conteudo: </label>
-                <textarea name="conteudo" class="form-control"></textarea>
+                <textarea name="conteudo" class="form-control" required minlength="20"></textarea>
 
             <label for="categoria">Categorias: </label>
                 <select name="categoria" class="form-control">

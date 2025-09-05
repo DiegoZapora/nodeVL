@@ -7,10 +7,13 @@
         <div class="card-body">
             <h2>Titulo: {{titulo}}</h2>
             <p>Descrição: {{descricao}}</p>
-            <p>Conteudo: {{conteudo}}</p>
             <small>Categoria: {{categoria.nome}}</small> <br>
-            <small>Slug: {{slug}}</small> <br>
             <small>Criação: {{data}}</small> <br>
+            <a href="/admin/postagens/edit/{{_id}}"><button class="btn btn-success mt-2">Editar Postagem</button></a><br>
+            <form action="/admin/postagens/deletar/{{_id}}" method="post">
+                <input type="hidden" name="id" value="{{_id}}">
+                <button class="btn btn-danger mt-2">Deletar</button>
+            </form>
         </div>
     </div>
 {{else}}

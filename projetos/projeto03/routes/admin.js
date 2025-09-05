@@ -153,61 +153,85 @@ router.get("/postagens/add", (req, res) => {
 })
 
 router.post("/postagens/nova", (req, res) => {
-    let erros = []
 
-    if (!req.body.titulo || typeof req.body.titulo == undefined || req.body.titulo == null) {
-        erros.push({texto: "Titulo inválido."})
+    const novaPostagem = {
+        titulo: req.body.titulo,
+        slug: req.body.slug,
+        descricao: req.body.descricao,
+        conteudo: req.body.conteudo,
+        categoria: req.body.categoria
     }
 
-    if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null) {
-        erros.push({texto: "Slug inválido."})
-    }
+    new Postagem(novaPostagem).save()
+    .then(() => {
+        req.flash("sucessoMSG", "Postagem criada com sucesso.")
+        res.redirect("/admin/postagens")
+    })
+    .catch((erro) => {
+        req.flash("erroMSG", "Erro ao criar postagem. Tente novamente.")
+        res.redirect("/admin/postagens")
+    })
+})
 
-    if (!req.body.conteudo || typeof req.body.conteudo == undefined || req.body.conteudo == null) {
-        erros.push({texto: "Conteudo invalido"})
-    }
+router.get("/postagens/edit/:id", (req, res) => {
 
-    if (!req.body.descricao || typeof req.body.descricao == undefined || req.body.descricao == null) {
-        erros.push({texto: "Descrição invalida"})
-    }
+    Postagem.findOne({_id: req.params.id}).lean()
+    .then((postagem) => {
 
-    if(req.body.titulo.length <= 1) {
-        erros.push({texto: "Titulo muito curto."})
-    }
+        Categoria.find().lean()
+        .then((categorias) => {
+            res.render("admin/editpostagens", {categorias: categorias, postagem: postagem})
+        })
+        .catch(() => {
+            req.flash("erroMSG", "Houve um erro ao carregar categorias.")
+            res.redirect("/admin/postagens")
+        })
+    })
+    .catch(() => {
+        req.flash("erroMSG", "Houve um erro ao carregar o formulario de edição")
+        res.redirect("/admin/postagens")
+    })
+})
 
-    if(req.body.descricao.length <= 10) {
-        erros.push({texto: "Descrição muito curta."})
-    }
+router.post("/postagem/edit", (req, res) => {
+    
+    Postagem.findOne({_id: req.body.id})
+    .then((postagem) => {
 
-    if(req.body.conteudo.length <= 25) {
-        erros.push({texto: "Conteudo muito curto."})
-    }
+        postagem.titulo = req.body.titulo
+        postagem.slug = req.body.slug
+        postagem.conteudo = req.body.conteudo
+        postagem.descricao = req.body.descricao
+        postagem.categoria = req.body.categoria
 
-    if (req.body.categoria == 0) {
-        erros.push({texto: "Nenhuma categoria selecionada."})
-    }
-
-    if (erros.length > 0) {
-        res.render("admin/addpostagens", {erros: erros})
-    } else {
-        const novaPostagem = {
-            titulo: req.body.titulo,
-            slug: req.body.slug,
-            descricao: req.body.descricao,
-            conteudo: req.body.conteudo,
-            categoria: req.body.categoria
-        }
-
-        new Postagem(novaPostagem).save()
+        postagem.save()
         .then(() => {
-            req.flash("sucessoMSG", "Postagem criada com sucesso.")
+            req.flash("sucessoMSG", "Postagem editada com sucesso")
             res.redirect("/admin/postagens")
         })
-        .catch((erro) => {
-            req.flash("erroMSG", "Erro ao criar postagem. Tente novamente.")
+        .catch(() => {
+            req.flash("erroMSG", "Erro ao editar postagem")
             res.redirect("/admin/postagens")
         })
-    }
+
+    })
+    .catch((err) => {
+        req.flash("erroMSG", "Houve um erro ao salvar a edição" + err)
+        res.redirect("/admin/postagens")
+    })
+
+})
+
+router.post("/postagens/deletar/:id", (req, res) => {
+    Postagem.deleteOne({_id: req.params.id})
+    .then(() => {
+        req.flash("sucessoMSG", "Postagem deletada com sucesso.")
+        res.redirect("/admin/postagens")
+    })
+    .catch(() => {
+        req.flash("erroMSG", "Houve um erro ao deletar postagem!")
+        res.redirect("/admin/postagens")
+    })
 })
 
 module.exports = router
