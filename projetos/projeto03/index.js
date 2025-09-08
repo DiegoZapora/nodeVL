@@ -16,6 +16,7 @@ const Categoria = mongoose.model("categorias")
 //Modulos Rotas
 
 const admin = require("./routes/admin.js")
+const usuarios = require("./routes/usuario.js")
 
 //Config
 
@@ -122,6 +123,7 @@ app.get("/404", (req, res) => {
 })
 
 app.use('/admin', admin)
+app.use("/usuarios", usuarios)
 
 //Rodando
 
