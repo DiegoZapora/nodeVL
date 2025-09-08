@@ -1,0 +1,30 @@
+<div class="card" style="border: 1px solid black; background-color: rgba(128, 128, 128, 0.568);">
+    <div class="card-body">
+        <h1 class="display-4">Bem-vindo(a) ao Blog</h1>
+        <p class="lead">Cara, as vezes a vida é dura, mas nada pode ser tão duro quanto uma pedra, pense nisso.</p>
+        <hr>
+        <p>Andre Matos</p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Crie uma conta</a>
+    </div>
+</div>
+
+<hr>
+<h2>Postagens recentes: </h2>
+
+{{#each postagens}}
+
+<a href="/postagem/{{slug}}" style="text-decoration: none; color: black">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h3>{{titulo}}</h3>
+            <p>{{descricao}}</p>
+            <a href="/postagem/{{slug}}"><button class="btn btn-success">Saiba mais</button></a>
+            <hr>
+            <small>Categoria: {{categoria.nome}}</small> <br>
+            <small>Data de publicação: {{data}}</small>
+        </div>
+    </div>
+</a>
+{{else}}
+    <h5>Nenhuma postagem encontrada.</h5>
+{{/each}}
