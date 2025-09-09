@@ -7,11 +7,13 @@ const mongoose = require("mongoose")
 const path = require("path")
 const session = require("express-session")
 const flash = require("connect-flash")
+const passport = require("passport")
 
 require("./models/Postagem.js")
 const Postagem = mongoose.model("postagens")
 require("./models/Categoria.js")
 const Categoria = mongoose.model("categorias")
+require("./config/auth.js")
 
 //Modulos Rotas
 
@@ -22,13 +24,16 @@ const usuarios = require("./routes/usuario.js")
 
 app.use(session({
     secret: "andrematos",
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash())
 app.use((req, res, next) => {
     res.locals.sucessoMSG = req.flash("sucessoMSG")
     res.locals.erroMSG = req.flash("erroMSG")
+    res.locals.error = req.flash("error")
     next()
 })
 
