@@ -1,7 +1,6 @@
 //Modulos
 const express = require('express')
 const app = express()
-const porta = 8085
 const handleBars = require("express-handlebars")
 const mongoose = require("mongoose")
 const path = require("path")
@@ -34,6 +33,7 @@ app.use((req, res, next) => {
     res.locals.sucessoMSG = req.flash("sucessoMSG")
     res.locals.erroMSG = req.flash("erroMSG")
     res.locals.error = req.flash("error")
+    res.locals.user = req.user || null
     next()
 })
 
@@ -130,8 +130,15 @@ app.get("/404", (req, res) => {
 app.use('/admin', admin)
 app.use("/usuarios", usuarios)
 
-//Rodando
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("Conectado ao MongoDB Atlas!"))
+.catch(err => console.error("Erro ao conectar:", err));
 
+//Rodando
+const porta = process.env.PORT || 8085
 app.listen(porta, () => {
     console.log("Servidor Rodando!")
 })
