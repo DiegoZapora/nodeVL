@@ -14,6 +14,6 @@
     "sequelize": "^6.37.7"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node projetos/projeto03/index.js"
   }
 }

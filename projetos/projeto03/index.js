@@ -130,6 +130,10 @@ app.get("/404", (req, res) => {
 app.use('/admin', admin)
 app.use("/usuarios", usuarios)
 
+//Rodando
+
+const porta = process.env.PORT || 8085
+
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -137,8 +141,6 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("Conectado ao MongoDB Atlas!"))
 .catch(err => console.error("Erro ao conectar:", err));
 
-//Rodando
-const porta = process.env.PORT || 8085
 app.listen(porta, () => {
     console.log("Servidor Rodando!")
 })
